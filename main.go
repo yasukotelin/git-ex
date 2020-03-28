@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v2"
+	"github.com/yasukotelin/git-ex/cmd"
 )
 
 func main() {
@@ -12,9 +13,14 @@ func main() {
 		Name:    "git-ex",
 		Usage:   "git-ex is a subcommand that extends Git",
 		Version: "0.1.0",
-		Action: func(c *cli.Context) error {
-			return nil
+		Commands: []*cli.Command{
+			&cli.Command{
+				Name:   "discard",
+				Usage:  "Executes the removing all changes from the HEAD that include untracked files",
+				Action: cmd.Discard,
+			},
 		},
+		Action: cli.ShowAppHelp,
 	}
 
 	err := app.Run(os.Args)
