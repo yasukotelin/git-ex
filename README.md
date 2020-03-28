@@ -1,6 +1,14 @@
 # git-ex
 
+[Japanese page](./README-JP.md)
+
 git-ex is a subcommand that extends Git.
+
+## Installation
+
+```
+go get install github.com/yasukotelin/git-ex
+```
 
 ## Commands
 
