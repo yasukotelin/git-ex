@@ -26,6 +26,8 @@ git ex stage
 
 You can stage the files with selecter.
 
+![stage.gif](./images/stage.gif)
+
 ### UnStage
 
 ```
@@ -33,6 +35,8 @@ git ex unstage
 ```
 
 You can unstage the files with selecter.
+
+![unstage.gif](./images/unstage.gif)
 
 ### Discard
 
