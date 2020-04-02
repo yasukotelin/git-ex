@@ -18,7 +18,7 @@ var gitStatusFileUtil = &util.GitStatusFileSliceUtil{}
 
 // Stage stages the files with selecter
 func Stage(c *cli.Context) error {
-	unStages, err := gitUseCase.FetchUnStagePath()
+	unStages, err := gitUseCase.FetchUnStageStatusFiles()
 	if err != nil {
 		return err
 	}
@@ -55,6 +55,51 @@ func Stage(c *cli.Context) error {
 				gitUseCase.Stage(unStages[i-defaultChoices].Path)
 				messages = stringSliceUtil.Remove(messages, i)
 				unStages = gitStatusFileUtil.Remove(unStages, i-defaultChoices)
+				selectedIndex = i
+			}
+		}
+	}
+}
+
+// UnStage unstages the files with selecter
+func UnStage(c *cli.Context) error {
+	stages, err := gitUseCase.FetchStageStatusFiles()
+	if err != nil {
+		return err
+	}
+
+	messages := append([]string{all, finish}, getValues(stages)...)
+	selectedIndex := defaultChoices
+
+	for {
+		if len(messages) == defaultChoices {
+			// 選択肢が無くなったら終了
+			return nil
+		}
+
+		prompt := promptui.Select{
+			Label:     "Select the file you want to stage",
+			Items:     messages,
+			Size:      15,
+			CursorPos: selectedIndex,
+		}
+		i, r, err := prompt.Run()
+
+		if err != nil {
+			return err
+		}
+
+		switch r {
+		case all:
+			gitUseCase.UnStages(getPaths(stages))
+			return nil
+		case finish:
+			return nil
+		default:
+			{
+				gitUseCase.UnStage(stages[i-defaultChoices].Path)
+				messages = stringSliceUtil.Remove(messages, i)
+				stages = gitStatusFileUtil.Remove(stages, i-defaultChoices)
 				selectedIndex = i
 			}
 		}

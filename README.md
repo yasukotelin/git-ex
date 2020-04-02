@@ -25,6 +25,14 @@ git ex stage
 
 You can stage the files with selecter.
 
+### UnStage
+
+```
+git ex unstage
+```
+
+You can unstage the files with selecter.
+
 ### Discard
 
 ```
