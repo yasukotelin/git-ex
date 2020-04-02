@@ -9,9 +9,8 @@ import (
 )
 
 const all = "...(All)"
-const cancel = "...(Cancel)"
-const apply = "...(Apply)"
-const defaultChoices = 3
+const finish = "...(Finish)"
+const defaultChoices = 2
 
 var gitUseCase = &git.GitUseCase{}
 var stringSliceUtil = &util.StringSliceUtil{}
@@ -24,15 +23,13 @@ func Stage(c *cli.Context) error {
 		return err
 	}
 
-	messages := append([]string{cancel, all, apply}, getValues(unStages)...)
-	selected := make([]entity.GitStatusFile, 0, len(unStages))
+	messages := append([]string{all, finish}, getValues(unStages)...)
 	selectedIndex := defaultChoices
 
-ASK:
 	for {
 		if len(messages) == defaultChoices {
-			// 選択肢が無くなったら確定
-			break
+			// 選択肢が無くなったら終了
+			return nil
 		}
 
 		prompt := promptui.Select{
@@ -48,24 +45,20 @@ ASK:
 		}
 
 		switch r {
-		case apply:
-			break ASK
-		case cancel:
-			return nil
 		case all:
-			selected = append(selected, unStages...)
-			break ASK
+			gitUseCase.Stages(getPaths(unStages))
+			return nil
+		case finish:
+			return nil
 		default:
 			{
-				selected = append(selected, unStages[i-defaultChoices])
+				gitUseCase.Stage(unStages[i-defaultChoices].Path)
 				messages = stringSliceUtil.Remove(messages, i)
 				unStages = gitStatusFileUtil.Remove(unStages, i-defaultChoices)
 				selectedIndex = i
 			}
 		}
 	}
-
-	return (&git.GitUseCase{}).Stage(getPaths(selected))
 }
 
 func getValues(s []entity.GitStatusFile) []string {

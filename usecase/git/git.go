@@ -26,8 +26,12 @@ func (g *GitUseCase) FetchUnStagePath() ([]entity.GitStatusFile, error) {
 	return result, nil
 }
 
-func (g *GitUseCase) Stage(paths []string) error {
-	return (&git.StageRepository{}).Stage(paths)
+func (g *GitUseCase) Stage(path string) error {
+	return (&git.StageRepository{}).Stage(path)
+}
+
+func (g *GitUseCase) Stages(paths []string) error {
+	return (&git.StageRepository{}).Stages(paths)
 }
 
 func (g *GitUseCase) Discard() error {
