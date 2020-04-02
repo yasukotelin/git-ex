@@ -12,9 +12,18 @@ go get install github.com/yasukotelin/git-ex
 
 ## Commands
 
+- `git ex stage`
 - `git ex discard`
 
 ## Features
+
+### Stage
+
+```
+git ex stage
+```
+
+You can stage the files with selecter.
 
 ### Discard
 

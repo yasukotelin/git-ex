@@ -12,12 +12,17 @@ func main() {
 	app := &cli.App{
 		Name:    "git-ex",
 		Usage:   "git-ex is a subcommand that extends Git",
-		Version: "0.1.0",
+		Version: "0.2.0",
 		Commands: []*cli.Command{
 			&cli.Command{
 				Name:   "discard",
 				Usage:  "Executes the removing all changes from the HEAD that include untracked files",
 				Action: cmd.Discard,
+			},
+			&cli.Command{
+				Name:   "stage",
+				Usage:  "Executes the staging files with selecter.",
+				Action: cmd.Stage,
 			},
 		},
 		Action: cli.ShowAppHelp,
