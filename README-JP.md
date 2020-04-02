@@ -6,7 +6,7 @@ git-exはGitコマンドを拡張するサブコマンドです。
 ## Installation
 
 ```
-go get install github.com/yasukotelin/git-ex
+go get -u github.com/yasukotelin/git-ex
 ```
 
 ## Commands
