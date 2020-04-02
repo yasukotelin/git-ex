@@ -25,6 +25,8 @@ git ex stage
 
 ステージングしたいファイルを選択してステージングすることができます。
 
+![stage.gif](./images/stage.gif)
+
 ### UnStage
 
 ```
@@ -32,6 +34,8 @@ git ex unstage
 ```
 
 ワーキングエリアに戻したいファイルを選択してアンステージングすることができます。
+
+![unstage.gif](./images/unstage.gif)
 
 ### Discard
 
