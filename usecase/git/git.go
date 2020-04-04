@@ -5,15 +5,41 @@ import (
 	"github.com/yasukotelin/git-ex/repository/git"
 )
 
-type GitUseCase struct {
+type GitUseCase interface {
+	FetchStatus() ([]entity.GitStatusFile, error)
+	FetchUnStageStatusFiles() ([]entity.GitStatusFile, error)
+	FetchStageStatusFiles() ([]entity.GitStatusFile, error)
+	Stage(path string) error
+	Stages(paths []string) error
+	UnStage(path string) error
+	UnStages(paths []string) error
+	Discard() error
 }
 
-func (g *GitUseCase) FetchStatus() ([]entity.GitStatusFile, error) {
-	return (&git.StatusRepository{}).FetchStatus()
+type GitUseCaseImpl struct {
+	statusRepo git.StatusRepository
+	stashRepo  git.StashRepository
+	stageRepo  git.StageRepository
 }
 
-func (g *GitUseCase) FetchUnStageStatusFiles() ([]entity.GitStatusFile, error) {
-	status, err := (&git.StatusRepository{}).FetchStatus()
+func NewGitUseCaseImpl(
+	statusRepo git.StatusRepository,
+	stashRepo git.StashRepository,
+	stageRepo git.StageRepository,
+) GitUseCase {
+	return &GitUseCaseImpl{
+		statusRepo: statusRepo,
+		stashRepo:  stashRepo,
+		stageRepo:  stageRepo,
+	}
+}
+
+func (g *GitUseCaseImpl) FetchStatus() ([]entity.GitStatusFile, error) {
+	return g.statusRepo.FetchStatus()
+}
+
+func (g *GitUseCaseImpl) FetchUnStageStatusFiles() ([]entity.GitStatusFile, error) {
+	status, err := g.statusRepo.FetchStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -26,8 +52,8 @@ func (g *GitUseCase) FetchUnStageStatusFiles() ([]entity.GitStatusFile, error) {
 	return result, nil
 }
 
-func (g *GitUseCase) FetchStageStatusFiles() ([]entity.GitStatusFile, error) {
-	status, err := (&git.StatusRepository{}).FetchStatus()
+func (g *GitUseCaseImpl) FetchStageStatusFiles() ([]entity.GitStatusFile, error) {
+	status, err := g.statusRepo.FetchStatus()
 	if err != nil {
 		return nil, err
 	}
@@ -40,28 +66,26 @@ func (g *GitUseCase) FetchStageStatusFiles() ([]entity.GitStatusFile, error) {
 	return result, nil
 }
 
-func (g *GitUseCase) Stage(path string) error {
-	return (&git.StageRepository{}).Stage(path)
+func (g *GitUseCaseImpl) Stage(path string) error {
+	return g.stageRepo.Stage(path)
 }
 
-func (g *GitUseCase) Stages(paths []string) error {
-	return (&git.StageRepository{}).Stages(paths)
+func (g *GitUseCaseImpl) Stages(paths []string) error {
+	return g.stageRepo.Stages(paths)
 }
 
-func (g *GitUseCase) UnStage(path string) error {
-	return (&git.StageRepository{}).UnStage(path)
+func (g *GitUseCaseImpl) UnStage(path string) error {
+	return g.stageRepo.UnStage(path)
 }
 
-func (g *GitUseCase) UnStages(paths []string) error {
-	return (&git.StageRepository{}).UnStages(paths)
+func (g *GitUseCaseImpl) UnStages(paths []string) error {
+	return g.stageRepo.UnStages(paths)
 }
 
-func (g *GitUseCase) Discard() error {
-	stashRepo := &git.StashRepository{}
-
-	err := stashRepo.SaveIncludeUntracked()
+func (g *GitUseCaseImpl) Discard() error {
+	err := g.stashRepo.SaveIncludeUntracked()
 	if err != nil {
 		return err
 	}
-	return stashRepo.Drop()
+	return g.stashRepo.Drop()
 }

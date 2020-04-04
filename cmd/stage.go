@@ -4,17 +4,11 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/urfave/cli/v2"
 	"github.com/yasukotelin/git-ex/entity"
-	"github.com/yasukotelin/git-ex/usecase/git"
-	"github.com/yasukotelin/git-ex/util"
 )
 
 const all = "...(All)"
 const finish = "...(Finish)"
 const defaultChoices = 2
-
-var gitUseCase = &git.GitUseCase{}
-var stringSliceUtil = &util.StringSliceUtil{}
-var gitStatusFileUtil = &util.GitStatusFileSliceUtil{}
 
 // Stage stages the files with selecter
 func Stage(c *cli.Context) error {

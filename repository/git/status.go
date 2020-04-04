@@ -7,9 +7,17 @@ import (
 	"github.com/yasukotelin/git-ex/entity"
 )
 
-type StatusRepository struct{}
+type StatusRepository interface {
+	FetchStatus() ([]entity.GitStatusFile, error)
+}
 
-func (r *StatusRepository) FetchStatus() ([]entity.GitStatusFile, error) {
+type StatusRepositoryImpl struct{}
+
+func NewStatusRepositoryImpl() StatusRepository {
+	return &StatusRepositoryImpl{}
+}
+
+func (r *StatusRepositoryImpl) FetchStatus() ([]entity.GitStatusFile, error) {
 	out, err := exec.Command("git", "status", "--porcelain").Output()
 	if err != nil {
 		return nil, err
