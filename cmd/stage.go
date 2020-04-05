@@ -6,22 +6,19 @@ import (
 	"github.com/yasukotelin/git-ex/entity"
 )
 
-const all = "...(All)"
-const finish = "...(Finish)"
-const defaultChoices = 2
-
 // Stage stages the files with selecter
 func Stage(c *cli.Context) error {
-	unStages, err := gitUseCase.FetchUnStageStatusFiles()
+	unStages, err := gitUseCase.FetchUnStageWithUntracked()
 	if err != nil {
 		return err
 	}
 
-	messages := append([]string{all, finish}, getValues(unStages)...)
-	selectedIndex := defaultChoices
+	defaultChoices := []string{all, finish}
+	messages := append(defaultChoices, getValues(unStages)...)
+	selectedIndex := len(defaultChoices)
 
 	for {
-		if len(messages) == defaultChoices {
+		if len(messages) == len(defaultChoices) {
 			// 選択肢が無くなったら終了
 			return nil
 		}
@@ -46,9 +43,9 @@ func Stage(c *cli.Context) error {
 			return nil
 		default:
 			{
-				gitUseCase.Stage(unStages[i-defaultChoices].Path)
+				gitUseCase.Stage(unStages[i-len(defaultChoices)].Path)
 				messages = stringSliceUtil.Remove(messages, i)
-				unStages = gitStatusFileUtil.Remove(unStages, i-defaultChoices)
+				unStages = gitStatusFileUtil.Remove(unStages, i-len(defaultChoices))
 				selectedIndex = i
 			}
 		}
@@ -57,16 +54,17 @@ func Stage(c *cli.Context) error {
 
 // UnStage unstages the files with selecter
 func UnStage(c *cli.Context) error {
-	stages, err := gitUseCase.FetchStageStatusFiles()
+	stages, err := gitUseCase.FetchStage()
 	if err != nil {
 		return err
 	}
 
-	messages := append([]string{all, finish}, getValues(stages)...)
-	selectedIndex := defaultChoices
+	defaultChoices := []string{all, finish}
+	messages := append(defaultChoices, getValues(stages)...)
+	selectedIndex := len(defaultChoices)
 
 	for {
-		if len(messages) == defaultChoices {
+		if len(messages) == len(defaultChoices) {
 			// 選択肢が無くなったら終了
 			return nil
 		}
@@ -91,9 +89,9 @@ func UnStage(c *cli.Context) error {
 			return nil
 		default:
 			{
-				gitUseCase.UnStage(stages[i-defaultChoices].Path)
+				gitUseCase.UnStage(stages[i-len(defaultChoices)].Path)
 				messages = stringSliceUtil.Remove(messages, i)
-				stages = gitStatusFileUtil.Remove(stages, i-defaultChoices)
+				stages = gitStatusFileUtil.Remove(stages, i-len(defaultChoices))
 				selectedIndex = i
 			}
 		}

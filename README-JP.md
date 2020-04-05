@@ -13,6 +13,7 @@ go get -u github.com/yasukotelin/git-ex
 
 - `git ex stage`
 - `git ex unstage`
+- `git ex diff`
 - `git ex discard`
 
 ## Features
@@ -36,6 +37,21 @@ git ex unstage
 ワーキングエリアに戻したいファイルを選択してアンステージングすることができます。
 
 ![unstage.gif](./images/unstage.gif)
+
+### Diff
+
+```
+git ex diff
+```
+
+You can see the diff selected file.By default, you can choose from the unstage file.
+ファイルを選択してdiffを表示することができます。デフォルトでは、アンステージングファイルの中から選択可能です。
+
+`--satage` オプションを付ければステージングファイルの中から選択できます。
+
+```
+git ex diff --stage
+```
 
 ### Discard
 

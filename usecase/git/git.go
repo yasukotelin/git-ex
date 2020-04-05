@@ -7,12 +7,15 @@ import (
 
 type GitUseCase interface {
 	FetchStatus() ([]entity.GitStatusFile, error)
-	FetchUnStageStatusFiles() ([]entity.GitStatusFile, error)
-	FetchStageStatusFiles() ([]entity.GitStatusFile, error)
+	FetchStage() ([]entity.GitStatusFile, error)
+	FetchUnStage() ([]entity.GitStatusFile, error)
+	FetchUnStageWithUntracked() ([]entity.GitStatusFile, error)
 	Stage(path string) error
 	Stages(paths []string) error
 	UnStage(path string) error
 	UnStages(paths []string) error
+	DiffAll(isStage bool) error
+	Diff(isStage bool, path string) error
 	Discard() error
 }
 
@@ -20,17 +23,20 @@ type GitUseCaseImpl struct {
 	statusRepo git.StatusRepository
 	stashRepo  git.StashRepository
 	stageRepo  git.StageRepository
+	diffRepo   git.DiffRepository
 }
 
 func NewGitUseCaseImpl(
 	statusRepo git.StatusRepository,
 	stashRepo git.StashRepository,
 	stageRepo git.StageRepository,
+	diffRepo git.DiffRepository,
 ) GitUseCase {
 	return &GitUseCaseImpl{
 		statusRepo: statusRepo,
 		stashRepo:  stashRepo,
 		stageRepo:  stageRepo,
+		diffRepo:   diffRepo,
 	}
 }
 
@@ -38,7 +44,21 @@ func (g *GitUseCaseImpl) FetchStatus() ([]entity.GitStatusFile, error) {
 	return g.statusRepo.FetchStatus()
 }
 
-func (g *GitUseCaseImpl) FetchUnStageStatusFiles() ([]entity.GitStatusFile, error) {
+func (g *GitUseCaseImpl) FetchStage() ([]entity.GitStatusFile, error) {
+	status, err := g.statusRepo.FetchStatus()
+	if err != nil {
+		return nil, err
+	}
+	result := make([]entity.GitStatusFile, 0, len(status))
+	for _, s := range status {
+		if s.IsStaged {
+			result = append(result, s)
+		}
+	}
+	return result, nil
+}
+
+func (g *GitUseCaseImpl) FetchUnStage() ([]entity.GitStatusFile, error) {
 	status, err := g.statusRepo.FetchStatus()
 	if err != nil {
 		return nil, err
@@ -52,14 +72,14 @@ func (g *GitUseCaseImpl) FetchUnStageStatusFiles() ([]entity.GitStatusFile, erro
 	return result, nil
 }
 
-func (g *GitUseCaseImpl) FetchStageStatusFiles() ([]entity.GitStatusFile, error) {
+func (g *GitUseCaseImpl) FetchUnStageWithUntracked() ([]entity.GitStatusFile, error) {
 	status, err := g.statusRepo.FetchStatus()
 	if err != nil {
 		return nil, err
 	}
 	result := make([]entity.GitStatusFile, 0, len(status))
 	for _, s := range status {
-		if s.IsStaged {
+		if s.IsUnstaged || s.IsUntracked {
 			result = append(result, s)
 		}
 	}
@@ -80,6 +100,14 @@ func (g *GitUseCaseImpl) UnStage(path string) error {
 
 func (g *GitUseCaseImpl) UnStages(paths []string) error {
 	return g.stageRepo.UnStages(paths)
+}
+
+func (g *GitUseCaseImpl) DiffAll(isStage bool) error {
+	return g.diffRepo.DiffAll(isStage)
+}
+
+func (g *GitUseCaseImpl) Diff(isStage bool, path string) error {
+	return g.diffRepo.Diff(isStage, path)
 }
 
 func (g *GitUseCaseImpl) Discard() error {

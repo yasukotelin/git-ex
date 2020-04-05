@@ -14,6 +14,7 @@ go get -u github.com/yasukotelin/git-ex
 
 - `git ex stage`
 - `git ex unstage`
+- `git ex diff`
 - `git ex discard`
 
 ## Features
@@ -37,6 +38,20 @@ git ex unstage
 You can unstage the files with selecter.
 
 ![unstage.gif](./images/unstage.gif)
+
+### Diff
+
+```
+git ex diff
+```
+
+You can see the diff selected file.By default, you can choose from the unstage file.
+
+You can use the `--stage` option to select from a stage file.
+
+```
+git ex diff --stage
+```
 
 ### Discard
 

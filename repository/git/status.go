@@ -38,11 +38,8 @@ func makeGitStatusFile(row string) entity.GitStatusFile {
 
 	statusMark := row[0:2]
 	if statusMark == "??" {
-		result.IsUntracked = true
-		result.IsStaged = false
-		result.IsUnstaged = true
+		result.IsUnstaged = false
 	} else {
-		result.IsUntracked = false
 		if statusMark[:1] != " " {
 			result.IsStaged = true
 		}
