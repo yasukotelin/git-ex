@@ -11,6 +11,7 @@ var gitUseCase = git.NewGitUseCaseImpl(
 	repoGit.NewStashRepositoryImpl(),
 	repoGit.NewStageRepositoryImpl(),
 	repoGit.NewDiffRepositoryImpl(),
+	repoGit.NewBranchRepositoryImpl(),
 )
 var stringSliceUtil = &util.StringSliceUtil{}
 var gitStatusFileUtil = &util.GitStatusFileSliceUtil{}

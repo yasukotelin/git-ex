@@ -12,7 +12,7 @@ func main() {
 	app := &cli.App{
 		Name:    "git-ex",
 		Usage:   "git-ex is a subcommand that extends Git",
-		Version: "0.4.0",
+		Version: "0.5.0",
 		Commands: []*cli.Command{
 			&cli.Command{
 				Name:   "discard",
@@ -40,6 +40,11 @@ func main() {
 					},
 				},
 				Action: cmd.Diff,
+			},
+			&cli.Command{
+				Name:   "branch",
+				Usage:  "Checkout a branch with selecter",
+				Action: cmd.Branch,
 			},
 		},
 		Action: cli.ShowAppHelp,
