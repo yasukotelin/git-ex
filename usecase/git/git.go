@@ -11,6 +11,7 @@ type GitUseCase interface {
 	FetchUnStage() ([]entity.GitStatusFile, error)
 	FetchUnStageWithUntracked() ([]entity.GitStatusFile, error)
 	FetchBranch() ([]string, error)
+	FetchAllBranch() ([]string, error)
 	FetchMergedBranch() ([]string, error)
 	Checkout(path string) error
 	Stage(path string) error
@@ -95,6 +96,10 @@ func (g *GitUseCaseImpl) FetchUnStageWithUntracked() ([]entity.GitStatusFile, er
 
 func (g *GitUseCaseImpl) FetchBranch() ([]string, error) {
 	return g.branchRepo.Fetch()
+}
+
+func (g *GitUseCaseImpl) FetchAllBranch() ([]string, error) {
+	return g.branchRepo.FetchAll()
 }
 
 func (g *GitUseCaseImpl) FetchMergedBranch() ([]string, error) {

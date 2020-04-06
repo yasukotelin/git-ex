@@ -28,6 +28,12 @@ git ex branch
 
 You can checkout a branch with selecter.
 
+You can use the `--all` or `-a` option to select from local and remote file.
+
+```
+git ex branch --all
+```
+
 ### Stage
 
 ```

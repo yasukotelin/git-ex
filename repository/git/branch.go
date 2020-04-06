@@ -7,6 +7,7 @@ import (
 
 type BranchRepository interface {
 	Fetch() ([]string, error)
+	FetchAll() ([]string, error)
 	FetchMerged() ([]string, error)
 	Checkout(path string) error
 }
@@ -19,6 +20,10 @@ func NewBranchRepositoryImpl() BranchRepository {
 
 func (b *BranchRepositoryImpl) Fetch() ([]string, error) {
 	return fetch()
+}
+
+func (b *BranchRepositoryImpl) FetchAll() ([]string, error) {
+	return fetch("-a")
 }
 
 func (b *BranchRepositoryImpl) FetchMerged() ([]string, error) {

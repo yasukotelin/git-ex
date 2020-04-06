@@ -6,7 +6,15 @@ import (
 )
 
 func Branch(c *cli.Context) error {
-	branchs, err := gitUseCase.FetchBranch()
+	isAll := c.Bool("all")
+
+	var branchs []string
+	var err error
+	if isAll {
+		branchs, err = gitUseCase.FetchAllBranch()
+	} else {
+		branchs, err = gitUseCase.FetchBranch()
+	}
 	if err != nil {
 		return err
 	}
