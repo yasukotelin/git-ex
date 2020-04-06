@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"strings"
+
 	"github.com/manifoldco/promptui"
 	"github.com/urfave/cli/v2"
 )
@@ -38,6 +40,12 @@ func Branch(c *cli.Context) error {
 	case cancel:
 		return nil
 	default:
-		return gitUseCase.Checkout(r)
+		{
+			branch := r
+			if strings.HasPrefix(r, "remotes") {
+				branch = strings.SplitN(r, "/", 3)[2]
+			}
+			return gitUseCase.Checkout(branch)
+		}
 	}
 }
