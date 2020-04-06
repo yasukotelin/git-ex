@@ -12,12 +12,21 @@ go get -u github.com/yasukotelin/git-ex
 
 ## Commands
 
+- `git ex branch`
 - `git ex stage`
 - `git ex unstage`
 - `git ex diff`
 - `git ex discard`
 
 ## Features
+
+### branch
+
+```
+git ex branch
+```
+
+You can checkout a branch with selecter.
 
 ### Stage
 

@@ -10,12 +10,16 @@ type GitUseCase interface {
 	FetchStage() ([]entity.GitStatusFile, error)
 	FetchUnStage() ([]entity.GitStatusFile, error)
 	FetchUnStageWithUntracked() ([]entity.GitStatusFile, error)
+	FetchBranch() ([]string, error)
+	FetchMergedBranch() ([]string, error)
+	Checkout(path string) error
 	Stage(path string) error
 	Stages(paths []string) error
 	UnStage(path string) error
 	UnStages(paths []string) error
 	DiffAll(isStage bool) error
 	Diff(isStage bool, path string) error
+	DeleteBranch(branch string) error
 	Discard() error
 }
 
@@ -24,6 +28,7 @@ type GitUseCaseImpl struct {
 	stashRepo  git.StashRepository
 	stageRepo  git.StageRepository
 	diffRepo   git.DiffRepository
+	branchRepo git.BranchRepository
 }
 
 func NewGitUseCaseImpl(
@@ -31,12 +36,14 @@ func NewGitUseCaseImpl(
 	stashRepo git.StashRepository,
 	stageRepo git.StageRepository,
 	diffRepo git.DiffRepository,
+	branchRepo git.BranchRepository,
 ) GitUseCase {
 	return &GitUseCaseImpl{
 		statusRepo: statusRepo,
 		stashRepo:  stashRepo,
 		stageRepo:  stageRepo,
 		diffRepo:   diffRepo,
+		branchRepo: branchRepo,
 	}
 }
 
@@ -86,6 +93,18 @@ func (g *GitUseCaseImpl) FetchUnStageWithUntracked() ([]entity.GitStatusFile, er
 	return result, nil
 }
 
+func (g *GitUseCaseImpl) FetchBranch() ([]string, error) {
+	return g.branchRepo.Fetch()
+}
+
+func (g *GitUseCaseImpl) FetchMergedBranch() ([]string, error) {
+	return g.branchRepo.FetchMerged()
+}
+
+func (g *GitUseCaseImpl) Checkout(path string) error {
+	return g.branchRepo.Checkout(path)
+}
+
 func (g *GitUseCaseImpl) Stage(path string) error {
 	return g.stageRepo.Stage(path)
 }
@@ -108,6 +127,10 @@ func (g *GitUseCaseImpl) DiffAll(isStage bool) error {
 
 func (g *GitUseCaseImpl) Diff(isStage bool, path string) error {
 	return g.diffRepo.Diff(isStage, path)
+}
+
+func (g *GitUseCaseImpl) DeleteBranch(branch string) error {
+	return nil
 }
 
 func (g *GitUseCaseImpl) Discard() error {
