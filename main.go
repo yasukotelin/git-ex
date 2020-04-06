@@ -12,7 +12,7 @@ func main() {
 	app := &cli.App{
 		Name:    "git-ex",
 		Usage:   "git-ex is a subcommand that extends Git",
-		Version: "0.5.0",
+		Version: "0.6.0",
 		Commands: []*cli.Command{
 			&cli.Command{
 				Name:   "discard",
@@ -42,8 +42,16 @@ func main() {
 				Action: cmd.Diff,
 			},
 			&cli.Command{
-				Name:   "branch",
-				Usage:  "Checkout a branch with selecter",
+				Name:  "branch",
+				Usage: "Checkout a branch with selecter",
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "all",
+						Aliases: []string{"a"},
+						Value:   false,
+						Usage:   "true is showing local and remote branchs, false is local only",
+					},
+				},
 				Action: cmd.Branch,
 			},
 		},
