@@ -43,6 +43,7 @@ func Branch(c *cli.Context) error {
 		{
 			branch := r
 			if strings.HasPrefix(r, "remotes") {
+				// remotes/{リモート名}/{ブランチ名}からブランチ名だけを取り出す
 				branch = strings.SplitN(r, "/", 3)[2]
 			}
 			return gitUseCase.Checkout(branch)
